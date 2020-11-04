@@ -6,11 +6,8 @@ const projectId = process.env.project_id;
 const randomFileName = `${uuidv4()}.json`;
 const keyFilename = `/tmp/${randomFileName}`;
 
-try {
-    fs.writeFileSync(keyFilename, process.env.google_credentials);
-} catch (error) {
-    console.error(error.message);
-}
+fs.writeFileSync(keyFilename, process.env.google_credentials);
+
 const client = new SecretManagerServiceClient({projectId, keyFilename});
 
 const app = async() => {
@@ -31,6 +28,7 @@ const app = async() => {
             return true;
         } catch (error) {
             console.error(error.message);
+            process.exit(1);
         }
     }
     
@@ -48,18 +46,26 @@ const app = async() => {
             return true;
         } catch (error) {
             console.error(error.message);
+            process.exit(1);
         }
     }
     
     const deleteSecret = async (name) => {
-        await client.deleteSecret({
-          name: name,
-        });
-    
-        console.log(`Deleted secret ${name}`);
+        try {
+            await client.deleteSecret({
+              name: name,
+            });
+        
+            console.log(`Deleted secret ${name}`);
+        } catch (error) {
+            console.error(error.message);
+            process.exit(1);
+        }
     }
 
     try {    
+        
+
         const parent = `projects/${projectId}`;
     
         const [secrets] = await client.listSecrets({
@@ -98,6 +104,7 @@ const app = async() => {
     
     } catch (error) {
         console.error(error.message);
+        process.exit(1);
     }
 }
 app();

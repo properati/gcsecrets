@@ -1,3 +1,4 @@
 node_modules
 .drone.yml
 secrets.txt
+secrets_fail.txt
