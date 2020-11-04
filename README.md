@@ -21,14 +21,15 @@ name: default
 steps:
 - name: gcsecrets
   image: ateszki/gcsecrets
-  pull: if-not-exists
+  pull: always
   environment:
     google_credentials: 
       from_secret: gcp_secrets_credentials_stg  
-    project_id: <GCP Project id> 
+    project_id: <GCP Project ID>  
   settings:
     secrets:
       string_var: "aaa67890zzz"
       numeric_var: 322232
       list_var: [1,2,4,5]
+
 ```
